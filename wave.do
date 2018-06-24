@@ -73,6 +73,9 @@ add wave -noupdate -format Literal /mano_core_tb/CORE/DP/alub
 add wave -noupdate -format Literal /mano_core_tb/CORE/DP/aluout
 add wave -noupdate -format Logic /mano_core_tb/CORE/s_flag
 add wave -noupdate -format Logic /mano_core_tb/CORE/CP/s_in
+add wave -noupdate -divider CACHE
+add wave -noupdate -format Logic /mano_core_tb/CORE/DP/cache_hit
+add wave -noupdate -format Logic /mano_core_tb/CORE/DP/CACHE/mem_rd
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {425 ns} 0}
 configure wave -namecolwidth 221
