@@ -211,7 +211,9 @@ module ctrlpath (	mrst, mclk,
 				default:
 				cs_ir_ld = 1;
 			endcase
-		end else begin
+		end 
+		else 
+		begin
 			VDD = 1'b0;
 		end
 	end

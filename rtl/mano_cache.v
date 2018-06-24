@@ -50,7 +50,7 @@ module dmc256x16 (	clr,
 		end
 	end
 
-	always @(cpu_addr)
+	always @(cpu_addr, posedge clk)
 	begin
 		if (cpu_rd == 1) begin
 			offset = cpu_addr[7:0];
