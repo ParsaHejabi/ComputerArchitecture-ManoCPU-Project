@@ -72,9 +72,7 @@ module ctrlpath (	mrst, mclk,
 	wire [11:0] op;
 	
 	wire D0, D1, D2, D3, D4, D5, D6, D7;
-	wire VDD;
-	
-	assign VDD = 1'b1;
+	reg VDD = 1'b1;
 	
 	initial s_in = 1'b1;
 	
@@ -214,7 +212,7 @@ module ctrlpath (	mrst, mclk,
 				cs_ir_ld = 1;
 			endcase
 		end else begin
-			assign VDD = 1'b0;
+			VDD = 1'b0;
 		end
 	end
 endmodule

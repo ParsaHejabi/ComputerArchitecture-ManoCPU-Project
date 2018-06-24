@@ -12,6 +12,11 @@
 `define buswidth	3
 `define seqwidth	3
 
+// cache
+// NEW!!
+`define cachecap    256
+`define cachewidth  22
+
 // ALU functions
 `define NO_FUNC		4'b0000
 `define CIL_FUNC 	4'b0001
