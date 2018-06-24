@@ -37,14 +37,14 @@ module dmc256x16 (	clr,
 	reg [3:0] tag;
 	reg [21:0] selectedRow;
 
-	reg mem_rd_reg = 1'b0;
-	reg mem_wr_reg = 1'b0;
+	reg mem_rd_reg;
+	reg mem_wr_reg;
 
 	integer i;
 
 	initial
 	begin
-		cache_hit = 0;
+		cache_hit = 1;
 		for (i = 0; i < `cachewidth; i = i+1) begin
 			cacheBank[i] = zero;
 		end

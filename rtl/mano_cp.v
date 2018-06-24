@@ -85,50 +85,50 @@ module ctrlpath (	mrst, mclk,
 	// State machine
 	always @(T, D0, D1, D2, D3, D4, D5, D6, D7, op, E, I, AC, DR, FGI, FGO)
 	begin
-		cs_ar_clr = 0;
-		cs_ir_clr = 0;
-		cs_pc_clr = 0;
-		cs_dr_clr = 0;
-		cs_ac_clr = 0;
-		cs_tr_clr = 0;
-		cs_inpr_clr = 0;
-		cs_outr_clr = 0;
-		cs_ar_inc = 0;
-		cs_ir_inc = 0;
-		cs_pc_inc = 0;
-		cs_dr_inc = 0;
-		cs_ac_inc = 0;
-		cs_tr_inc = 0;
-		cs_inpr_inc = 0;
-		cs_outr_inc = 0;
-		cs_ar_ld = 0;
-		cs_ir_ld = 0;
-		cs_pc_ld = 0;
-		cs_dr_ld = 0;
-		cs_ac_ld = 0;
-		cs_tr_ld = 0;
-		cs_tr_ld = 0;
-		cs_tr_clr = 0;
-		cs_inpr_ld = 0;
-		cs_outr_ld = 0;
-		cs_i_ld = 0;
-		cs_i_clr = 0;
-		cs_fgi_ld = 0;
-		cs_fgi_clr = 0;
-		cs_fgo_ld = 0;
-		cs_fgo_clr = 0;
-		cs_s_ld = 0;
-		cs_s_clr = 0;
-		cs_mem_rd = 0;
-		cs_mem_wr = 0;
-		cs_bus_sel = 3'b000;
-		cs_alu_func = 3'b000;
-		cs_alub_sel = 0;
-		seq_clr_t = 0;
-		r_in = 0;
-		cs_r_ld = 0;
-		cs_r_clr = 0;
-		if (cache_hit == 0) begin
+		if (cache_hit == 1) begin
+			cs_ar_clr = 0;
+			cs_ir_clr = 0;
+			cs_pc_clr = 0;
+			cs_dr_clr = 0;
+			cs_ac_clr = 0;
+			cs_tr_clr = 0;
+			cs_inpr_clr = 0;
+			cs_outr_clr = 0;
+			cs_ar_inc = 0;
+			cs_ir_inc = 0;
+			cs_pc_inc = 0;
+			cs_dr_inc = 0;
+			cs_ac_inc = 0;
+			cs_tr_inc = 0;
+			cs_inpr_inc = 0;
+			cs_outr_inc = 0;
+			cs_ar_ld = 0;
+			cs_ir_ld = 0;
+			cs_pc_ld = 0;
+			cs_dr_ld = 0;
+			cs_ac_ld = 0;
+			cs_tr_ld = 0;
+			cs_tr_ld = 0;
+			cs_tr_clr = 0;
+			cs_inpr_ld = 0;
+			cs_outr_ld = 0;
+			cs_i_ld = 0;
+			cs_i_clr = 0;
+			cs_fgi_ld = 0;
+			cs_fgi_clr = 0;
+			cs_fgo_ld = 0;
+			cs_fgo_clr = 0;
+			cs_s_ld = 0;
+			cs_s_clr = 0;
+			cs_mem_rd = 0;
+			cs_mem_wr = 0;
+			cs_bus_sel = 3'b000;
+			cs_alu_func = 3'b000;
+			cs_alub_sel = 0;
+			seq_clr_t = 0;
+			r_in = 0;
+			cs_r_ld = 0;
+			cs_r_clr = 0;
 			case (T)
 				`T0:  // AR <-- PC
 				begin 
@@ -141,7 +141,7 @@ module ctrlpath (	mrst, mclk,
 						seq_clr_t = 1;
 				end
 				`T1:  // IR <-- M[AR] , PC <-- PC + 1
-				begin cs_ir_ld = 1; cs_bus_sel = `BUS_MEM; cs_pc_inc = 1; end
+				begin cs_mem_rd = 1; cs_ir_ld = 1; cs_bus_sel = `BUS_MEM; cs_pc_inc = 1; end
 				`T2:  // AR <-- IR[12:0], I <-- IR[15]
 				begin cs_bus_sel = `BUS_IR; cs_i_ld = 1; cs_ar_ld = 1;  end
 				`T3:
