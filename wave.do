@@ -76,6 +76,7 @@ add wave -noupdate -format Logic /mano_core_tb/CORE/CP/s_in
 add wave -noupdate -format Literal /mano_core_tb/CORE/DP/busout
 add wave -noupdate -format Logic /mano_core_tb/CORE/CP/VDD
 add wave -noupdate -divider CACHE
+add wave -noupdate -format Literal -radix binary /mano_core_tb/CORE/DP/CACHE/cacheBank
 add wave -noupdate -format Logic /mano_core_tb/CORE/DP/CACHE/cache_hit
 add wave -noupdate -format Logic /mano_core_tb/CORE/DP/CACHE/cpu_addr
 add wave -noupdate -format Logic /mano_core_tb/CORE/DP/CACHE/cpu_rd
