@@ -33,7 +33,8 @@ module datapath (	mrst, mclk,
 					FGO,
 					S,
 					R,
-					IEN
+					IEN,
+					b_signal
 					);
 	input mclk, mrst;
 	input cs_ar_clr, cs_ir_clr, cs_pc_clr, cs_dr_clr, cs_ac_clr, cs_tr_clr, cs_inpr_clr, cs_outr_clr;
@@ -57,6 +58,9 @@ module datapath (	mrst, mclk,
 	output S;
 	output R;
 	output IEN;
+
+	//NEW!!
+	output b_signal;
 	// Registers and flags
 	wire [`datawidth-1:0] alua, alub, aluout;
 	wire [`iowidth-1:0] inprin;
@@ -84,7 +88,7 @@ module datapath (	mrst, mclk,
 	
 	// Components
 	register 	   #(.width(`addrwidth)) AR_R   (.clk(mclk), .rst(cs_ar_clr_t),   .ld(cs_ar_ld),   .inc(cs_ar_inc),   .d(busout[11:0]), .q(AR) );	
-	register 	   #(.width(`datawidth)) IR_R   (.clk(mclk), .rst(cs_ir_clr_t),   .ld(cs_ir_ld),   .inc(cs_ir_inc),   .d(busout),       .q(IR) );
+	register 	   #(.width(`datawidth)) IR_R   (.clk(mclk), .rst(cs_ir_clr_t),   .ld(cs_ir_ld),   .inc(cs_ir_inc),   .d(cache_cpu_dout),       .q(IR) );
 	register 	   #(.width(`addrwidth)) PC_R   (.clk(mclk), .rst(cs_pc_clr_t),   .ld(cs_pc_ld),   .inc(cs_pc_inc),   .d(busout[11:0]), .q(PC) );
 	register 	   #(.width(`datawidth)) DR_R   (.clk(mclk), .rst(cs_dr_clr_t),   .ld(cs_dr_ld),   .inc(cs_dr_inc),   .d(busout),       .q(DR) );
 	register 	   #(.width(`datawidth)) AC_R   (.clk(mclk), .rst(cs_ac_clr_t),   .ld(cs_ac_ld),   .inc(cs_ac_inc),   .d(aluout),       .q(AC) );
@@ -111,7 +115,8 @@ module datapath (	mrst, mclk,
 						.mem_rd(cache_mem_rd), 
 						.mem_wr(cache_mem_wr), 
 						.mem_din(memout), 
-						.mem_dout(cache_mem_dout)
+						.mem_dout(cache_mem_dout),
+						.b(b_signal)
 					);
 
 	mem4096x16 MEM  (	.clk(mclk), 

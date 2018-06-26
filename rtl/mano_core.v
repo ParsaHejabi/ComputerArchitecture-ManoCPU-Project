@@ -20,6 +20,7 @@ module mano_core (	mrst, mclk );
 	wire [`datawidth-1:0] ac;
 	wire [`datawidth-1:0] dr;
 	wire e_flag, i_flag, fgi_flag, fgo_flag, s_flag, ready;
+	wire b_signal;
 						
 	ctrlpath CP (	.mrst(mrst), 							
 					.mclk(mclk), 
@@ -81,7 +82,8 @@ module mano_core (	mrst, mclk );
 					.FGO(fgo_flag),
 					.S(s_flag),
 					.R(r_flag),
-					.IEN(ien_flag)					
+					.IEN(ien_flag),
+					.b_signal(b_signal)
 					);
 					
 	datapath    DP (.mrst(mrst), 
@@ -144,6 +146,7 @@ module mano_core (	mrst, mclk );
 					.FGO(fgo_flag),
 					.S(s_flag),
 					.R(r_flag),
-					.IEN(ien_flag)					
+					.IEN(ien_flag),
+					.b_signal(b_signal)				
 					);
 endmodule

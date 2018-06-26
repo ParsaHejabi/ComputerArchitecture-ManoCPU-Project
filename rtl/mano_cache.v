@@ -11,7 +11,8 @@ module dmc256x16 (	clr,
 					//NEW
 					ir_ld_b, 
 					// Cache - Memory signals
-					mem_addr, mem_rd, mem_wr, mem_din, mem_dout);
+					mem_addr, mem_rd, mem_wr, mem_din, mem_dout,
+					b);
 	input 	clr;
 	input 	clk;
 	input 	cpu_rd;
@@ -38,6 +39,7 @@ module dmc256x16 (	clr,
 	// NEW!!
 	reg [`cachewidth-1:0] cacheBank [0:`cachecap-1];
 	reg [`cachewidth-1:0] zero = 0;
+	output b;
 	reg b = 0;
 
 	reg [7:0] offset;
@@ -131,9 +133,9 @@ module dmc256x16 (	clr,
 			if (selectedRow2[0] == 1) begin
 				if (selectedRow2[1] == 1) begin
 					mem_wr_reg = 1'b1;
-					mem_addr[11:8] = selectedRow[5:2];
+					mem_addr[11:8] = selectedRow2[5:2];
 					mem_addr[7:0] = offsetIncoming;
-					mem_dout = selectedRow[21:6];
+					mem_dout = selectedRow2[21:6];
 					rowToWrite[1] = 0;
 				end
 			end
