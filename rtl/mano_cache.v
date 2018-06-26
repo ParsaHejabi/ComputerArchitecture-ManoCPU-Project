@@ -32,6 +32,7 @@ module dmc256x16 (	clr,
 	// NEW!!
 	reg [`cachewidth-1:0] cacheBank [0:`cachecap-1];
 	reg [`cachewidth-1:0] zero = 0;
+	reg b = 0;
 
 	reg [7:0] offset;
 	reg [3:0] tag;
@@ -63,28 +64,47 @@ module dmc256x16 (	clr,
 					cpu_dout = selectedRow[21:6];
 				end
 				else begin
+					if (b == 0) 
+					begin
+						cache_hit = 0;
+						mem_addr = cpu_addr;
+						mem_rd_reg = 1'b1;
+						b = 1;
+					end
+					else
+					begin
+						selectedRow[21:6] = mem_din;
+						selectedRow[5:2] = tag;
+						selectedRow[1] = 0;
+						selectedRow[0] = 1;
+						cacheBank[offset] = selectedRow;
+						cpu_dout = selectedRow[21:6];
+						b = 0;
+						cache_hit = 1;
+					end
+				end
+			end
+			else begin
+				if (b == 0) 
+				begin
+					// VALID bit is 0 so data is NOT VALID!
 					cache_hit = 0;
 					mem_addr = cpu_addr;
 					mem_rd_reg = 1'b1;
+					b = 1;
+				end
+				else
+				begin
 					selectedRow[21:6] = mem_din;
 					selectedRow[5:2] = tag;
 					selectedRow[1] = 0;
 					selectedRow[0] = 1;
+					cacheBank[offset] = selectedRow;
 					cpu_dout = selectedRow[21:6];
+					b = 0;
+					cache_hit = 1;
 				end
 			end
-			else begin
-				// VALID bit is 0 so data is NOT VALID!
-				cache_hit = 0;
-				mem_addr = cpu_addr;
-				mem_rd_reg = 1'b1;
-				selectedRow[21:6] = mem_din;
-				selectedRow[5:2] = tag;
-				selectedRow[1] = 0;
-				selectedRow[0] = 1;
-				cpu_dout = selectedRow[21:6];
-			end
-			cache_hit = 1;
 		end
 	end
 

@@ -129,6 +129,7 @@ module ctrlpath (	mrst, mclk,
 			r_in = 0;
 			cs_r_ld = 0;
 			cs_r_clr = 0;
+			VDD = 1'b1;
 			case (T)
 				`T0:  // AR <-- PC
 				begin 
@@ -211,7 +212,7 @@ module ctrlpath (	mrst, mclk,
 				default:
 				cs_ir_ld = 1;
 			endcase
-		end 
+		end
 		else 
 		begin
 			VDD = 1'b0;
