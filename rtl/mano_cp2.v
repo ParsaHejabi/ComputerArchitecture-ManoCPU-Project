@@ -32,8 +32,7 @@ module ctrlpath (	mrst, mclk,
 					FGO,
 					S,
 					R,
-					IEN,
-					b_signal
+					IEN
 					);
 	input mclk, mrst;
 	output cs_ar_clr, cs_ir_clr, cs_pc_clr, cs_dr_clr, cs_ac_clr, cs_tr_clr, cs_inpr_clr, cs_outr_clr;
@@ -74,9 +73,6 @@ module ctrlpath (	mrst, mclk,
 	
 	wire D0, D1, D2, D3, D4, D5, D6, D7;
 	reg VDD = 1'b1;
-
-	//NEW!!
-	input b_signal;
 	
 	initial s_in = 1'b1;
 	
@@ -87,9 +83,8 @@ module ctrlpath (	mrst, mclk,
 	assign seq_clr = seq_clr_t | mrst;
 	assign op = IR[11:0];
 	// State machine
-	always @(T, D0, D1, D2, D3, D4, D5, D6, D7, op, E, I, AC, DR, FGI, FGO, cache_hit)
+	always @(T, D0, D1, D2, D3, D4, D5, D6, D7, op, E, I, AC, DR, FGI, FGO)
 	begin
-		
 			cs_ar_clr = 0;
 			cs_ir_clr = 0;
 			cs_pc_clr = 0;
@@ -107,6 +102,7 @@ module ctrlpath (	mrst, mclk,
 			cs_inpr_inc = 0;
 			cs_outr_inc = 0;
 			cs_ar_ld = 0;
+			cs_ir_ld = 0;
 			cs_pc_ld = 0;
 			cs_dr_ld = 0;
 			cs_ac_ld = 0;
@@ -123,6 +119,7 @@ module ctrlpath (	mrst, mclk,
 			cs_fgo_clr = 0;
 			cs_s_ld = 0;
 			cs_s_clr = 0;
+			cs_mem_rd = 0;
 			cs_mem_wr = 0;
 			cs_bus_sel = 3'b000;
 			cs_alu_func = 3'b000;
@@ -131,67 +128,33 @@ module ctrlpath (	mrst, mclk,
 			r_in = 0;
 			cs_r_ld = 0;
 			cs_r_clr = 0;
-			if (cache_hit == 1) begin
-			VDD = 1'b1;
-			cs_mem_rd = 0;
-			cs_ir_ld = 0;
 			case (T)
 				`T0:  // AR <-- PC
 				begin 
 					if (s_in == 1)
-					begin
-						if(R==1)//Interrupt
-						begin
-							cs_ar_clr=1;
-							cs_bus_sel=`BUS_PC;
-							cs_tr_ld=1;
-						end
-						else
 						begin 
 							cs_bus_sel = `BUS_PC; 
-							cs_ar_ld = 1;
+							cs_ar_ld = 1; 
 						end
-					end
 					else
 						seq_clr_t = 1;
 				end
 				`T1:  // IR <-- M[AR] , PC <-- PC + 1
-				begin
-					if (R==1)//Interrupt
-					begin
-						cs_bus_sel = `BUS_TR;
-						cs_mem_wr = 1;
-						cs_pc_clr = 1;
-					end
-					else
-					begin
+				begin 
+				if (cache_hit==1) begin
+					VDD = 1'b1;
 					cs_mem_rd = 1;
 					cs_ir_ld = 1;
 					cs_bus_sel = `BUS_MEM;
 					cs_pc_inc = 1;
-					end
+				end
+				else
+					VDD=1'b0;
 				end
 				`T2:  // AR <-- IR[12:0], I <-- IR[15]
-				begin
-					if (R==1)//Interrupt
-					begin
-						cs_pc_inc=1;
-						ien_in=0;
-						r_in=0;
-						seq_clr_t=1;
-					end
-					else
-					begin
-						if (b_signal == 0) cs_ir_ld = 1;
-						cs_bus_sel = `BUS_IR; cs_i_ld = 1; cs_ar_ld = 1;
-					end
-				end
+				begin cs_bus_sel = `BUS_IR; cs_i_ld = 1; cs_ar_ld = 1;  end
 				`T3:
 				begin
-					if(IEN==1)
-					begin
-					  if(FGI==1 | FGO==1) cs_r_ld=1;
-					end
 					if (D7 == 0) // D7'.I.T3  Direct/Indirect
 					begin
 						if (I == 1 )
@@ -268,11 +231,5 @@ module ctrlpath (	mrst, mclk,
 				default:
 				cs_ir_ld = 1;
 			endcase
-		end
-		else 
-		begin
-			VDD = 1'b0;
-			//cs_pc_inc=0;
-		end
-	end
+		end 
 endmodule
