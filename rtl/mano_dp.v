@@ -87,14 +87,14 @@ module datapath (	mrst, mclk,
 	assign cs_s_clr_t    = cs_s_clr    | mrst;
 	
 	// Components
-	register 	   #(.width(`addrwidth)) AR_R   (.clk(mclk), .rst(cs_ar_clr_t),   .ld(cs_ar_ld),   .inc(cs_ar_inc),   .d(busout[11:0]), .q(AR) );	
-	register 	   #(.width(`datawidth)) IR_R   (.clk(mclk), .rst(cs_ir_clr_t),   .ld(cs_ir_ld),   .inc(cs_ir_inc),   .d(cache_cpu_dout),       .q(IR) );
-	register 	   #(.width(`addrwidth)) PC_R   (.clk(mclk), .rst(cs_pc_clr_t),   .ld(cs_pc_ld),   .inc(cs_pc_inc),   .d(busout[11:0]), .q(PC) );
-	register 	   #(.width(`datawidth)) DR_R   (.clk(mclk), .rst(cs_dr_clr_t),   .ld(cs_dr_ld),   .inc(cs_dr_inc),   .d(busout),       .q(DR) );
-	register 	   #(.width(`datawidth)) AC_R   (.clk(mclk), .rst(cs_ac_clr_t),   .ld(cs_ac_ld),   .inc(cs_ac_inc),   .d(aluout),       .q(AC) );
-	register 	   #(.width(`datawidth)) TR_R   (.clk(mclk), .rst(cs_tr_clr_t),   .ld(cs_tr_ld),   .inc(cs_tr_inc),   .d(busout),       .q(TR) );
-	register 	   #(.width(`iowidth))   INPR_R (.clk(mclk), .rst(cs_inpr_clr_t), .ld(cs_inpr_ld), .inc(cs_inpr_inc), .d(inprin),       .q(INPR) );
-	register 	   #(.width(`iowidth))   OUTR_R (.clk(mclk), .rst(cs_outr_clr_t), .ld(cs_outr_ld), .inc(cs_outr_inc), .d(busout[7:0]),  .q(OUTR) );
+	register 	   #(.width(`addrwidth)) AR_R   (.clk(mclk), .rst(cs_ar_clr_t),   .ld(cs_ar_ld),   .inc(cs_ar_inc),   .d(busout[11:0]),  .q(AR) );	
+	register 	   #(.width(`datawidth)) IR_R   (.clk(mclk), .rst(cs_ir_clr_t),   .ld(cs_ir_ld),   .inc(cs_ir_inc),   .d(cache_cpu_dout),.q(IR) );
+	register 	   #(.width(`addrwidth)) PC_R   (.clk(mclk), .rst(cs_pc_clr_t),   .ld(cs_pc_ld),   .inc(cs_pc_inc),   .d(busout[11:0]),  .q(PC) );
+	register 	   #(.width(`datawidth)) DR_R   (.clk(mclk), .rst(cs_dr_clr_t),   .ld(cs_dr_ld),   .inc(cs_dr_inc),   .d(busout),        .q(DR) );
+	register 	   #(.width(`datawidth)) AC_R   (.clk(mclk), .rst(cs_ac_clr_t),   .ld(cs_ac_ld),   .inc(cs_ac_inc),   .d(aluout),        .q(AC) );
+	register 	   #(.width(`datawidth)) TR_R   (.clk(mclk), .rst(cs_tr_clr_t),   .ld(cs_tr_ld),   .inc(cs_tr_inc),   .d(busout),        .q(TR) );
+	register 	   #(.width(`iowidth))   INPR_R (.clk(mclk), .rst(cs_inpr_clr_t), .ld(cs_inpr_ld), .inc(cs_inpr_inc), .d(inprin),        .q(INPR) );
+	register 	   #(.width(`iowidth))   OUTR_R (.clk(mclk), .rst(cs_outr_clr_t), .ld(cs_outr_ld), .inc(cs_outr_inc), .d(busout[7:0]),   .q(OUTR) );
 	dff E_F   		(.clk(mclk), .rst(cs_e_clr_t),   .ld(cs_e_ld),   .d(alu_e_out), .q(E) );
 	dff I_F   		(.clk(mclk), .rst(cs_i_clr_t),   .ld(cs_i_ld),   .d(IR[15]),    .q(I) );
 	dff FGI_F 		(.clk(mclk), .rst(cs_fgi_clr_t), .ld(cs_fgi_ld), .d(fgi_in),    .q(FGI) );
@@ -127,6 +127,7 @@ module datapath (	mrst, mclk,
 						.dout(memout)
 					);
 	alu ALU (.a(alua), .b(alub), .e_in(E), .func(cs_alu_func), .e_out(alu_e_out), .z(aluout));
+	 
 	                                                                      
 	// BUS Multiplexer                                                    
 	always @(cs_bus_sel)                                                  
@@ -139,7 +140,7 @@ module datapath (	mrst, mclk,
 			`BUS_INP : busout <= INPR;                                    
 			`BUS_IR  : busout <= IR;                                      
 			default  : busout <= TR;                                      
-		endcase                                                           
+		endcase  
 		                                                                  
 	assign alua = DR;                                                     
 	assign alub = (cs_alub_sel) ? {8'b00000000,INPR} : AC;                

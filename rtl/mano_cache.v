@@ -124,11 +124,12 @@ module dmc256x16 (	clr,
 	reg [21:0] selectedRow2;
 	reg [21:0] rowToWrite;
 
-	always @(posedge clk)
+
+	always @(cpu_din)
 	begin
-		if(cpu_wr == 1) begin
-			offsetIncoming = cpu_addr[7:0];
-			tagIncoming = cpu_addr[11:8];
+		if(cpu_din[15:12]==3 | cpu_din[15:12]==5 | cpu_din[15:12]==6) begin
+			offsetIncoming = cpu_din[7:0];
+			tagIncoming = cpu_din[11:8];
 			selectedRow2 = cacheBank[offsetIncoming];
 			if (selectedRow2[0] == 1) begin
 				if (selectedRow2[1] == 1) begin
@@ -143,7 +144,7 @@ module dmc256x16 (	clr,
 			rowToWrite[5:2] = tag;
 			rowToWrite[1] = 1;
 			rowToWrite[0] = 1;
-			cacheBank[offset] = rowToWrite;
+			cacheBank[offsetIncoming] = rowToWrite;
 		end
 	end
 
