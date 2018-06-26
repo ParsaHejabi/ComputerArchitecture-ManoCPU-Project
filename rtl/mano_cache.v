@@ -7,7 +7,9 @@
 module dmc256x16 (	clr, 
 					clk, 
 					// CPU - Cache signals
-					cpu_addr, cpu_rd, cpu_wr, cpu_din, cpu_dout, cache_hit, 
+					cpu_addr, cpu_rd, cpu_wr, cpu_din, cpu_dout, cache_hit,
+					//NEW
+					ir_ld_b, 
 					// Cache - Memory signals
 					mem_addr, mem_rd, mem_wr, mem_din, mem_dout);
 	input 	clr;
@@ -21,6 +23,10 @@ module dmc256x16 (	clr,
 	output  cache_hit;
 	reg     cache_hit;
 
+	//NEW
+	output ir_ld_b=0;
+	reg ir_ld_b;
+	
 	output 	mem_rd;
 	output 	mem_wr;
 	output	[`addrwidth-1:0] mem_addr;
@@ -103,6 +109,7 @@ module dmc256x16 (	clr,
 					cpu_dout = selectedRow[21:6];
 					b = 0;
 					cache_hit = 1;
+					ir_ld_b=1;
 				end
 			end
 		end
